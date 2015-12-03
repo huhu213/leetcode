@@ -1,25 +1,5 @@
 class Solution {
 public:
-   int myBinarySearch(vector<int>& v, int target, int startIndex){
-        int l = startIndex;
-        int r = v.size() - 1;
-        while(l <= r){
-            int middle = (r + l) >> 1;
-            if (v[middle] < target)
-            {
-                l = middle + 1;
-            }
-            else if (v[middle] > target)
-            {
-                r = middle - 1;
-            }
-            else{
-                return middle;
-            }
-        }
-        return -1;
-    }
-
     vector<vector<int> > threeSum(vector<int>& nums) {
         int len = nums.size();
         std::vector<vector<int> > result;
@@ -43,40 +23,45 @@ public:
         }
         else{
             sort(nums.begin(), nums.end());
-            int curIndex = 0;
-            int nextIndex = 1;
-            int currentSum = 0;
+            int currentIndex = 0;
+            int newTarget = 0;
+            int first = 0;
+            int last = len-1;
+            int firstPivot = 0;
+            int lastPivot = 0;
             int pivot = 0;
-            int nextPivot = 0;
-            int i = 0;
-            while(i < len-2)
-            {
-                curIndex = i;
-                nextIndex = curIndex + 1;
-                pivot = nums[curIndex];
-                while(nextIndex < len-1){
-                    currentSum = nums[curIndex] + nums[nextIndex];
-                    nextPivot = nums[nextIndex];
-                    int lastIndex = myBinarySearch(nums, -currentSum, nextIndex+1);
-                    if (lastIndex > 0)
+            while(currentIndex < len-2){
+                newTarget = 0 - nums[currentIndex];
+                first = currentIndex + 1;
+                last = len-1;
+                pivot = nums[currentIndex];
+                while(first < last){
+                    firstPivot = nums[first];
+                    lastPivot = nums[last];
+                    if (nums[first] + nums[last] == newTarget)
                     {
-                        v.push_back(nums[curIndex]);
-                        v.push_back(nums[nextIndex]);
-                        v.push_back(nums[lastIndex]);
-                        result.push_back(v);
                         v.clear();
+                        v.push_back(nums[currentIndex]);
+                        v.push_back(nums[first]);
+                        v.push_back(nums[last]);
+                        result.push_back(v);
+                        first ++;
+                        last --;
+                        while(first <= last && nums[first] == firstPivot){first ++;}
+                        while(last >= first && nums[last] == lastPivot){last --;}
                     }
-                    nextIndex ++;
-                    while(nums[nextIndex] == nextPivot)
+                    else if (nums[first] + nums[last] < newTarget)
                     {
-                        nextIndex ++;
+                        first ++;
+                        while(first <= last && nums[first] == firstPivot){first ++;}
+                    }
+                    else{
+                        last --;
+                        while(last >= first && nums[last] == lastPivot){last --;}
                     }
                 }
-                i ++;
-                while(nums[i] == pivot)
-                {
-                    i++;
-                }
+                currentIndex ++;
+                while(currentIndex < len-2 && nums[currentIndex] == pivot){currentIndex ++;}
             }
             return result;
         }
