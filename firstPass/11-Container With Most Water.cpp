@@ -18,16 +18,18 @@ public:
                 //基于最大面积只可能在height值超过当前height时出现这个前提
                 if (height[leftLoc] < height[rightLoc])
                 {
+                    while(leftLoc < rightLoc && height[leftLoc] == 0) leftLoc ++;
                     result = max(result, height[leftLoc] * (r-l));
                     int currentHeight = height[l];
                     leftLoc ++;
                     while(leftLoc < rightLoc && height[leftLoc] < currentHeight)
                     {
                         leftLoc ++;
-                    }
+                    }    
                 }
                 else
                 {
+                    while(rightLoc > leftLoc && height[rightLoc] == 0) rightLoc --;
                     result = max(result, height[rightLoc] * (r-l));
                     int currentHeight = height[rightLoc];
                     rightLoc --;
