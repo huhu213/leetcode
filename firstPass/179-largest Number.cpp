@@ -1,54 +1,40 @@
 class Solution {
 public:
-	void insert(int loc, vector<string>& str, string s) {
-		if(loc == str.size()) str.push_back(s);
-		else {
-			str.push_back(s);
-			for(int i = s.size()-1; i > loc; i --) {
-				str[i] = str[i-1];
-			}
-			str[loc] = s;
-		}
-	}
     string largestNumber(vector<int>& nums) {
         if(nums.size() == 0) return "";
         string result;
         if(nums.size() == 1) {
-        	stringstream ss;
-        	ss << nums[0];
-        	ss >> result;
-        	return result;
+            stringstream ss;
+            ss << nums[0];
+            ss >> result;
+            return result;
         }
         int l = nums.size();
         vector<string> str;
-        stringstream s1;
-        s1 << nums[0];
-        s1 >> result;
-        str.push_back(result);
-        for(int i = 1; i < l; i ++) {
+        for(int i = 0; i < l; i ++) {
             stringstream ss;
-        	string s;
-        	ss << nums[i];
-        	ss >> s;
-        	if(nums[i] == 0) str.push_back(s);
-        	else {
-        		int j = 0;
-        		for(; j < str.size(); j ++) {
-        			if(str[j].size() <= s.size()) {
-        				if(str[j] >= s) continue;
-        				else break;
-        			else {
-        				if(sr[j] >= s) continue;
-        				else break;
-        			}
-        		}
-    			if(j == str.size()) str.push_back(s);
-    			else {
-    				if(str[j] + s >= s + str[j]) str.insert(j+1, s);
-    				else str.insert(j, s);
-    			}
-        	}
+            string s;
+            ss << nums[i];
+            ss >> s;
+            str.push_back(s);
         }
+        sort(str.begin(), str.end());
+        for(int i = l-2; i >= 0; i --) {
+            if(str[i].size() >= str[i+1].size()) continue;
+            else {
+                string tmp = str[i];
+                int j = i + 1;
+                while((j < l) && (tmp.size() < str[j].size()) && (tmp+str[j] >= str[j]+tmp)) {
+                    str[j-1] = str[j];
+                    j ++;
+                }
+                str[j-1] = tmp;
+            }
+        }
+        for(int i = l-1; i >= 0; i --) {
+            result += str[i];
+        }
+        if(result[0] == '0') result = "0";
         return result;
     }
 };
